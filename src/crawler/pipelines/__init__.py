@@ -48,4 +48,9 @@ class MongoPipeline(object):
     def download_item(self, item):
         splitted_title = item["title"].split(' ')
         item['file_name'] = splitted_title[0] + "_".join(x for x in splitted_title[1::]) + ".pdf"
+        if '/' in item['file_name']:
+            splitted_title = item["title"].split('/')
+            item['file_name'] = splitted_title[0] + "_".join(x for x in splitted_title[1::])
+        if '.pdf' not in item['file_name']:
+            item['file_name'] = f'{item["file_name"]}.pdf'
         return item

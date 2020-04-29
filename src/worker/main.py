@@ -29,7 +29,7 @@ async def download_to_file(url, file_name):
 async def producer():
     redis = await aioredis.create_redis_pool('redis://redis')
     ch1, = await redis.subscribe('channel:download_request')
-    assert isinstance(ch1, aioredis.Channel)
+    # assert isinstance(ch1, aioredis.Channel)
 
     async def reader(channel):
         async for message in channel.iter():
@@ -37,8 +37,8 @@ async def producer():
             await q.put(message)
 
     asyncio.get_running_loop().create_task(reader(ch1))
-    # while True:
-        # continue
+    while True:
+        await asyncio.sleep(1)
 
 async def consumer(num):
     while True:
