@@ -1,0 +1,4 @@
+packaging
+aioredis
+requests
+aiohttp

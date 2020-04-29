@@ -1,0 +1,51 @@
+version: '3'
+services:
+
+  crawler:
+    build:
+      context: .
+      dockerfile: ./docker/crawler/Dockerfile
+    image: crawler:latest
+    entrypoint: ["/usr/local/bin/crawler-entrypoint.sh"]
+    command: ["bash", "run.sh"]
+    tty: true
+    volumes:
+      - ./src/crawler:/var/app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: test
+    volumes: 
+      - ./docker/mongo:/data/db:rw
+    ports:
+      - 9000:27017
+
+  # db_admin:
+  #   image: mrvautin/adminmongo
+  #   environment:
+  #     - HOST=0.0.0.0
+  #   ports:
+  #     - 11000:1234
+  #   depends_on:
+  #     - mongo
+
+  redis:
+    image: redis
+    ports:
+      - 6380:6379
+  
+  worker:
+    build:
+      context: .
+      dockerfile: ./docker/worker/Dockerfile
+    entrypoint: ["/usr/local/bin/worker-entrypoint.sh"]
+    command: ["bash", "run.sh"]
+    volumes:
+      - ./src/worker:/app
+    depends_on:
+      - redis

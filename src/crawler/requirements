@@ -1,0 +1,9 @@
+alembic
+brotli
+requests
+scrapy==2.0
+w3lib
+python-dotenv
+pymongo
+fake-useragent
+redis
